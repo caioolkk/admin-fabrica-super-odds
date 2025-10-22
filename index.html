@@ -4,85 +4,359 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Super Odds — Painel Admin</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Poppins", sans-serif; }
-    body { background: #fffbea; display: flex; justify-content: center; min-height: 100vh; padding: 20px; }
-    .container { background: white; border-radius: 20px; padding: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 500px; transition: all 0.3s ease; }
-    h1 { text-align: center; color: #b8860b; margin-bottom: 20px; }
-    .tabs { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
-    .tab { background: #ffe873; border: none; padding: 10px 18px; border-radius: 10px; cursor: pointer; transition: 0.2s; font-weight: 600; }
-    .tab.active { background: #ffd700; }
-    .card-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(120px,1fr)); gap: 10px; margin-bottom: 20px; }
-    .card { background: #fff7d1; border-radius: 12px; padding: 15px; text-align: center; box-shadow: inset 0 0 5px rgba(0,0,0,0.05); }
-    .card h3 { color: #b8860b; font-size: 1.2rem; }
-    .card p { font-size: 1.3rem; font-weight: 600; margin-top: 5px; }
-    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-    th, td { padding: 10px; text-align: left; font-size: 0.9rem; }
-    th { background: #ffeb99; }
-    tr:nth-child(even) { background: #fffef0; }
-    .status-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 6px; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: "Poppins", sans-serif;
+    }
+
+    body {
+      background: #fff9e6;
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 16px;
+      overflow-x: hidden; /* Evita scroll horizontal */
+    }
+
+    .container {
+      background: white;
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+      width: 100%;
+      max-width: 600px;
+      transition: all 0.3s ease;
+    }
+
+    h1 {
+      text-align: center;
+      color: #b8860b;
+      margin-bottom: 24px;
+      font-weight: 700;
+      font-size: 1.6rem;
+    }
+
+    .login-form, .main-content {
+      display: none;
+    }
+
+    .login-form.active {
+      display: block;
+    }
+
+    .main-content.active {
+      display: block;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: #555;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #ffd700;
+      border-radius: 10px;
+      font-size: 1rem;
+      outline: none;
+      transition: border 0.2s;
+    }
+
+    .form-group input:focus {
+      border-color: #b8860b;
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 12px;
+      background: #b8860b;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .login-btn:hover {
+      background: #a07000;
+    }
+
+    .tabs {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .tab {
+      background: #fff5b1;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: 0.2s;
+      font-weight: 600;
+      color: #555;
+    }
+
+    .tab.active {
+      background: #ffd700;
+      color: #2c2c2c;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .card {
+      background: #fffbe6;
+      border-radius: 14px;
+      padding: 16px;
+      text-align: center;
+      box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.04);
+      border: 1px solid #ffecb3;
+    }
+
+    .card h3 {
+      color: #b8860b;
+      font-size: 1rem;
+      margin-bottom: 6px;
+    }
+
+    .card p {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #2c2c2c;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      font-size: 0.92rem;
+    }
+
+    th, td {
+      padding: 12px 10px;
+      text-align: left;
+      word-break: break-word;
+    }
+
+    th {
+      background: #fff5b1;
+      font-weight: 600;
+      color: #2c2c2c;
+    }
+
+    tr:nth-child(even) {
+      background: #fffef5;
+    }
+
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+
     .dot-true { background: #22c55e; }
     .dot-false { background: #ef4444; }
     .dot-pending { background: #facc15; }
-    .actions button { margin-right: 5px; border: none; border-radius: 6px; padding: 5px 10px; cursor: pointer; font-weight: 600; transition: 0.2s; }
+
+    .actions button {
+      margin-right: 6px;
+      border: none;
+      border-radius: 8px;
+      padding: 6px 12px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.85rem;
+      transition: opacity 0.2s;
+    }
+
     .liberar { background: #22c55e; color: white; }
     .bloquear { background: #f59e0b; color: white; }
     .excluir { background: #ef4444; color: white; }
-    .actions button:hover { opacity: 0.8; }
-    .filter-btns { display: flex; justify-content: center; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
-    .filter-btn { background: #fff5b1; border: none; border-radius: 8px; padding: 6px 12px; cursor: pointer; transition: 0.2s; font-weight: 600; }
-    .filter-btn.active { background: #ffd700; }
-    canvas { margin-top: 20px; }
+
+    .actions button:hover {
+      opacity: 0.85;
+    }
+
+    .filter-btns {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      background: #fff5b1;
+      border: none;
+      border-radius: 10px;
+      padding: 8px 14px;
+      cursor: pointer;
+      transition: 0.2s;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .filter-btn.active {
+      background: #ffd700;
+    }
+
+    .chart-container {
+      margin-top: 20px;
+      position: relative;
+      height: 300px;
+    }
 
     /* Toasts */
-    .toast-container { position: fixed; top: 20px; right: 20px; display: flex; flex-direction: column; gap: 10px; z-index: 9999; }
-    .toast { background: #333; color: white; padding: 10px 20px; border-radius: 8px; opacity: 0; transform: translateY(-20px); animation: slideIn 0.4s forwards; }
+    .toast-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 9999;
+    }
+
+    .toast {
+      background: #333;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 10px;
+      opacity: 0;
+      transform: translateY(-20px);
+      animation: slideIn 0.4s forwards;
+      max-width: 300px;
+      word-wrap: break-word;
+    }
+
     .toast.success { background: #22c55e; }
     .toast.error { background: #ef4444; }
-    @keyframes slideIn { to { opacity: 1; transform: translateY(0); } }
+
+    @keyframes slideIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 18px;
+      }
+
+      h1 {
+        font-size: 1.4rem;
+      }
+
+      .card h3 {
+        font-size: 0.9rem;
+      }
+
+      .card p {
+        font-size: 1.25rem;
+      }
+
+      .actions button {
+        padding: 5px 10px;
+        font-size: 0.8rem;
+      }
+
+      table {
+        font-size: 0.85rem;
+      }
+
+      th, td {
+        padding: 10px 8px;
+      }
+    }
   </style>
 </head>
 <body>
+  <!-- TELA DE LOGIN -->
   <div class="container">
-    <h1>Super Odds — Painel Admin</h1>
-
-    <div class="tabs">
-      <button class="tab active" data-tab="dashboard">Dashboard</button>
-      <button class="tab" data-tab="usuarios">Usuários</button>
-      <button class="tab" data-tab="graficos">Gráficos</button>
-    </div>
-
-    <!-- DASHBOARD -->
-    <div id="dashboard" class="tab-content active">
-      <div class="card-grid">
-        <div class="card"><h3>Liberados</h3><p id="count-liberados">0</p></div>
-        <div class="card"><h3>Bloqueados</h3><p id="count-bloqueados">0</p></div>
-        <div class="card"><h3>Pendentes</h3><p id="count-pendentes">0</p></div>
+    <div class="login-form active" id="loginForm">
+      <h1>🔐 Acesso Admin</h1>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="admin2025@admin.com" autocomplete="off" />
       </div>
+      <div class="form-group">
+        <label for="password">Senha</label>
+        <input type="password" id="password" placeholder="••••••••••••" autocomplete="off" />
+      </div>
+      <button class="login-btn" onclick="login()">Entrar</button>
     </div>
 
-    <!-- USUÁRIOS -->
-    <div id="usuarios" class="tab-content" style="display:none;">
-      <div class="filter-btns">
-        <button class="filter-btn active" data-filter="all">Todos</button>
-        <button class="filter-btn" data-filter="true">Liberados</button>
-        <button class="filter-btn" data-filter="false">Bloqueados</button>
-        <button class="filter-btn" data-filter="pending">Pendentes</button>
+    <!-- CONTEÚDO PRINCIPAL -->
+    <div class="main-content" id="mainContent">
+      <h1>Super Odds — Painel Admin</h1>
+
+      <div class="tabs">
+        <button class="tab active" data-tab="dashboard">Dashboard</button>
+        <button class="tab" data-tab="usuarios">Usuários</button>
+        <button class="tab" data-tab="graficos">Gráficos</button>
       </div>
 
-      <table>
-        <thead>
-          <tr><th>Email</th><th>Status</th><th>Ações</th></tr>
-        </thead>
-        <tbody id="userTableBody"></tbody>
-      </table>
-    </div>
+      <!-- DASHBOARD -->
+      <div id="dashboard" class="tab-content active">
+        <div class="card-grid">
+          <div class="card"><h3>Liberados</h3><p id="count-liberados">0</p></div>
+          <div class="card"><h3>Bloqueados</h3><p id="count-bloqueados">0</p></div>
+          <div class="card"><h3>Pendentes</h3><p id="count-pendentes">0</p></div>
+        </div>
+      </div>
 
-    <!-- GRÁFICOS -->
-    <div id="graficos" class="tab-content" style="display:none;">
-      <canvas id="userChart"></canvas>
+      <!-- USUÁRIOS -->
+      <div id="usuarios" class="tab-content" style="display:none;">
+        <div class="filter-btns">
+          <button class="filter-btn active" data-filter="all">Todos</button>
+          <button class="filter-btn" data-filter="true">Liberados</button>
+          <button class="filter-btn" data-filter="false">Bloqueados</button>
+          <button class="filter-btn" data-filter="pending">Pendentes</button>
+        </div>
+
+        <table>
+          <thead>
+            <tr><th>Email</th><th>Status</th><th>Ações</th></tr>
+          </thead>
+          <tbody id="userTableBody"></tbody>
+        </table>
+      </div>
+
+      <!-- GRÁFICOS -->
+      <div id="graficos" class="tab-content" style="display:none;">
+        <div class="chart-container">
+          <canvas id="userChart"></canvas>
+        </div>
+        <div class="chart-container" style="margin-top: 30px;">
+          <canvas id="dailyChart"></canvas>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -91,7 +365,11 @@
   <script>
     const API_URL = "https://backendfabricasuperodds.onrender.com/api";
     const toastContainer = document.getElementById("toastContainer");
-    let chart;
+    let userChart, dailyChart;
+
+    // Credenciais fixas
+    const ADMIN_EMAIL = "admin2025@admin.com";
+    const ADMIN_PASSWORD = "adminadmin123321";
 
     function showToast(msg, type = "success") {
       const toast = document.createElement("div");
@@ -101,9 +379,28 @@
       setTimeout(() => {
         toast.style.opacity = "0";
         setTimeout(() => toast.remove(), 500);
-      }, 2500);
+      }, 3000);
     }
 
+    function login() {
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+
+      if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+        document.getElementById("loginForm").classList.remove("active");
+        document.getElementById("mainContent").classList.add("active");
+        carregarUsuarios();
+      } else {
+        showToast("Credenciais inválidas!", "error");
+      }
+    }
+
+    // Permitir login com Enter
+    document.getElementById("password").addEventListener("keypress", (e) => {
+      if (e.key === "Enter") login();
+    });
+
+    // Tabs
     document.querySelectorAll(".tab").forEach(btn => {
       btn.addEventListener("click", () => {
         document.querySelectorAll(".tab").forEach(b => b.classList.remove("active"));
@@ -113,44 +410,76 @@
       });
     });
 
-    async function carregarUsuarios() {
-      const res = await fetch(`${API_URL}/users`);
-      const data = await res.json();
-      if (!data.success) return showToast("Erro ao carregar usuários", "error");
+    // Filtros
+    document.querySelectorAll(".filter-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        renderUserTable(btn.dataset.filter);
+      });
+    });
 
+    let allUsers = [];
+
+    async function carregarUsuarios() {
+      try {
+        const res = await fetch(`${API_URL}/users`);
+        const data = await res.json();
+        if (!data.success) throw new Error("Falha ao carregar usuários");
+
+        allUsers = data.users;
+        renderUserTable("all");
+
+        // Contagem
+        const liberados = allUsers.filter(u => u.enabled).length;
+        const pendentes = allUsers.filter(u => !u.enabled).length;
+        const bloqueados = 0; // Seu backend não tem "bloqueado", só enabled true/false
+
+        document.getElementById("count-liberados").textContent = liberados;
+        document.getElementById("count-pendentes").textContent = pendentes;
+        document.getElementById("count-bloqueados").textContent = bloqueados;
+
+        renderChart(liberados, bloqueados, pendentes);
+        renderDailyChart(); // Simulado
+      } catch (err) {
+        console.error(err);
+        showToast("Erro ao carregar usuários", "error");
+      }
+    }
+
+    function renderUserTable(filter) {
       const tbody = document.getElementById("userTableBody");
       tbody.innerHTML = "";
-      let liberados = 0, bloqueados = 0, pendentes = 0;
 
-      data.users.forEach(user => {
-        let statusText = user.enabled ? "Liberado" : "Pendente";
-        let dotClass = user.enabled ? "dot-true" : "dot-pending";
+      let filtered = allUsers;
+      if (filter === "true") filtered = allUsers.filter(u => u.enabled);
+      else if (filter === "false") filtered = []; // Seu sistema não tem "bloqueado"
+      else if (filter === "pending") filtered = allUsers.filter(u => !u.enabled);
+
+      filtered.forEach(user => {
+        const statusText = user.enabled ? "Liberado" : "Pendente";
+        const dotClass = user.enabled ? "dot-true" : "dot-pending";
 
         const tr = document.createElement("tr");
         tr.innerHTML = `
           <td>${user.email}</td>
           <td><span class="status-dot ${dotClass}"></span>${statusText}</td>
           <td class="actions">
-            <button class="liberar">Liberar</button>
-            <button class="bloquear">Bloquear</button>
+            ${user.enabled ? 
+              `<button class="bloquear">Bloquear</button>` : 
+              `<button class="liberar">Liberar</button>`}
             <button class="excluir">Excluir</button>
           </td>
         `;
         tbody.appendChild(tr);
 
-        tr.querySelector(".liberar").onclick = () => atualizarUsuario(user.email, true);
-        tr.querySelector(".bloquear").onclick = () => atualizarUsuario(user.email, false);
+        if (user.enabled) {
+          tr.querySelector(".bloquear").onclick = () => atualizarUsuario(user.email, false);
+        } else {
+          tr.querySelector(".liberar").onclick = () => atualizarUsuario(user.email, true);
+        }
         tr.querySelector(".excluir").onclick = () => excluirUsuario(user.email);
-
-        if (user.enabled) liberados++;
-        else pendentes++;
       });
-
-      document.getElementById("count-liberados").textContent = liberados;
-      document.getElementById("count-pendentes").textContent = pendentes;
-      document.getElementById("count-bloqueados").textContent = bloqueados;
-
-      renderChart(liberados, bloqueados, pendentes);
     }
 
     async function atualizarUsuario(email, enabled) {
@@ -169,8 +498,8 @@
           showToast(data.message || "Erro ao atualizar usuário", "error");
         }
       } catch (err) {
-        showToast("Erro na requisição (ver console)", "error");
         console.error(err);
+        showToast("Erro na requisição", "error");
       }
     }
 
@@ -187,31 +516,68 @@
           showToast("Erro ao excluir usuário", "error");
         }
       } catch (err) {
-        showToast("Erro na requisição (ver console)", "error");
         console.error(err);
+        showToast("Erro na requisição", "error");
       }
     }
 
     function renderChart(liberados, bloqueados, pendentes) {
       const ctx = document.getElementById("userChart").getContext("2d");
-      if (chart) chart.destroy();
-      chart = new Chart(ctx, {
+      if (userChart) userChart.destroy();
+      userChart = new Chart(ctx, {
         type: "doughnut",
         data: {
           labels: ["Liberados", "Bloqueados", "Pendentes"],
           datasets: [{
             data: [liberados, bloqueados, pendentes],
-            backgroundColor: ["#22c55e", "#f59e0b", "#facc15"]
+            backgroundColor: ["#22c55e", "#f59e0b", "#facc15"],
+            borderWidth: 0
           }]
         },
         options: {
-          plugins: { legend: { position: "bottom" } },
-          responsive: true
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: "bottom" }
+          }
         }
       });
     }
 
-    carregarUsuarios();
+    function renderDailyChart() {
+      // Simulando dados de cadastros nos últimos 7 dias
+      const labels = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+      const data = Array.from({ length: 7 }, () => Math.floor(Math.random() * 8));
+
+      const ctx = document.getElementById("dailyChart").getContext("2d");
+      if (dailyChart) dailyChart.destroy();
+      dailyChart = new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: labels,
+          datasets: [{
+            label: "Novos Cadastros (7 dias)",
+            data: data,
+            backgroundColor: "#ffd700",
+            borderColor: "#b8860b",
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: { stepSize: 1 }
+            }
+          }
+        }
+      });
+    }
   </script>
 </body>
 </html>
