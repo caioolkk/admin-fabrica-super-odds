@@ -3,136 +3,45 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Painel Admin — Super Odds</title>
+  <title>Super Odds — Painel Admin</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    * {
-      box-sizing: border-box;
-      font-family: "Poppins", sans-serif;
-    }
-    body {
-      background: #fffbea;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      color: #333;
-    }
-    .container {
-      max-width: 900px;
-      width: 100%;
-      background: white;
-      border-radius: 20px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      padding: 30px;
-      margin-top: 30px;
-    }
-    h1 {
-      text-align: center;
-      color: #d4a017;
-      font-weight: 600;
-    }
-    .tabs {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 20px;
-      gap: 10px;
-    }
-    .tab {
-      background: #f8d54b;
-      border: none;
-      border-radius: 8px;
-      padding: 10px 20px;
-      cursor: pointer;
-      font-weight: 500;
-      transition: 0.2s;
-    }
-    .tab.active {
-      background: #ffbf00;
-      color: #fff;
-    }
-    .cards {
-      display: flex;
-      justify-content: space-around;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 20px;
-    }
-    .card {
-      background: #fff6d0;
-      border-radius: 10px;
-      padding: 20px;
-      width: 30%;
-      text-align: center;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    .card h2 {
-      color: #d4a017;
-      font-size: 18px;
-    }
-    .card p {
-      font-size: 24px;
-      font-weight: 600;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-    th, td {
-      padding: 10px;
-      text-align: left;
-    }
-    th {
-      background: #ffed99;
-    }
-    tr:nth-child(even) {
-      background: #fff9db;
-    }
-    .btn {
-      border: none;
-      padding: 5px 10px;
-      border-radius: 6px;
-      cursor: pointer;
-      color: #fff;
-      font-weight: 500;
-      transition: 0.2s;
-    }
-    .btn:hover {
-      opacity: 0.8;
-    }
-    .liberar { background: #28a745; }
-    .bloquear { background: #ffc107; color: #000; }
-    .excluir { background: #dc3545; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Poppins", sans-serif; }
+    body { background: #fffbea; display: flex; justify-content: center; min-height: 100vh; padding: 20px; }
+    .container { background: white; border-radius: 20px; padding: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 500px; transition: all 0.3s ease; }
+    h1 { text-align: center; color: #b8860b; margin-bottom: 20px; }
+    .tabs { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+    .tab { background: #ffe873; border: none; padding: 10px 18px; border-radius: 10px; cursor: pointer; transition: 0.2s; font-weight: 600; }
+    .tab.active { background: #ffd700; }
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(120px,1fr)); gap: 10px; margin-bottom: 20px; }
+    .card { background: #fff7d1; border-radius: 12px; padding: 15px; text-align: center; box-shadow: inset 0 0 5px rgba(0,0,0,0.05); }
+    .card h3 { color: #b8860b; font-size: 1.2rem; }
+    .card p { font-size: 1.3rem; font-weight: 600; margin-top: 5px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    th, td { padding: 10px; text-align: left; font-size: 0.9rem; }
+    th { background: #ffeb99; }
+    tr:nth-child(even) { background: #fffef0; }
+    .status-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 6px; }
+    .dot-true { background: #22c55e; }
+    .dot-false { background: #ef4444; }
+    .dot-pending { background: #facc15; }
+    .actions button { margin-right: 5px; border: none; border-radius: 6px; padding: 5px 10px; cursor: pointer; font-weight: 600; transition: 0.2s; }
+    .liberar { background: #22c55e; color: white; }
+    .bloquear { background: #f59e0b; color: white; }
+    .excluir { background: #ef4444; color: white; }
+    .actions button:hover { opacity: 0.8; }
+    .filter-btns { display: flex; justify-content: center; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
+    .filter-btn { background: #fff5b1; border: none; border-radius: 8px; padding: 6px 12px; cursor: pointer; transition: 0.2s; font-weight: 600; }
+    .filter-btn.active { background: #ffd700; }
+    canvas { margin-top: 20px; }
 
     /* Toasts */
-    .toast-container {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      z-index: 9999;
-    }
-    .toast {
-      background: #333;
-      color: #fff;
-      padding: 10px 20px;
-      border-radius: 8px;
-      animation: fadeInOut 3s forwards;
-    }
-    .toast.success { background: #28a745; }
-    .toast.error { background: #dc3545; }
-    @keyframes fadeInOut {
-      0% { opacity: 0; transform: translateY(-20px); }
-      10%, 90% { opacity: 1; transform: translateY(0); }
-      100% { opacity: 0; transform: translateY(-20px); }
-    }
-    @media (max-width: 600px) {
-      .card { width: 100%; }
-    }
+    .toast-container { position: fixed; top: 20px; right: 20px; display: flex; flex-direction: column; gap: 10px; z-index: 9999; }
+    .toast { background: #333; color: white; padding: 10px 20px; border-radius: 8px; opacity: 0; transform: translateY(-20px); animation: slideIn 0.4s forwards; }
+    .toast.success { background: #22c55e; }
+    .toast.error { background: #ef4444; }
+    @keyframes slideIn { to { opacity: 1; transform: translateY(0); } }
   </style>
 </head>
 <body>
@@ -140,148 +49,169 @@
     <h1>Super Odds — Painel Admin</h1>
 
     <div class="tabs">
-      <button class="tab active" onclick="showTab('dashboard')">Dashboard</button>
-      <button class="tab" onclick="showTab('users')">Usuários</button>
-      <button class="tab" onclick="showTab('charts')">Gráficos</button>
+      <button class="tab active" data-tab="dashboard">Dashboard</button>
+      <button class="tab" data-tab="usuarios">Usuários</button>
+      <button class="tab" data-tab="graficos">Gráficos</button>
     </div>
 
-    <div id="dashboard" class="tab-content">
-      <div class="cards">
-        <div class="card"><h2>Liberados</h2><p id="count-liberados">0</p></div>
-        <div class="card"><h2>Bloqueados</h2><p id="count-bloqueados">0</p></div>
-        <div class="card"><h2>Pendentes</h2><p id="count-pendentes">0</p></div>
+    <!-- DASHBOARD -->
+    <div id="dashboard" class="tab-content active">
+      <div class="card-grid">
+        <div class="card"><h3>Liberados</h3><p id="count-liberados">0</p></div>
+        <div class="card"><h3>Bloqueados</h3><p id="count-bloqueados">0</p></div>
+        <div class="card"><h3>Pendentes</h3><p id="count-pendentes">0</p></div>
       </div>
     </div>
 
-    <div id="users" class="tab-content" style="display:none;">
+    <!-- USUÁRIOS -->
+    <div id="usuarios" class="tab-content" style="display:none;">
+      <div class="filter-btns">
+        <button class="filter-btn active" data-filter="all">Todos</button>
+        <button class="filter-btn" data-filter="true">Liberados</button>
+        <button class="filter-btn" data-filter="false">Bloqueados</button>
+        <button class="filter-btn" data-filter="pending">Pendentes</button>
+      </div>
+
       <table>
         <thead>
-          <tr>
-            <th>Email</th>
-            <th>Status</th>
-            <th>Ações</th>
-          </tr>
+          <tr><th>Email</th><th>Status</th><th>Ações</th></tr>
         </thead>
-        <tbody id="users-table"></tbody>
+        <tbody id="userTableBody"></tbody>
       </table>
     </div>
 
-    <div id="charts" class="tab-content" style="display:none;">
-      <canvas id="statusChart"></canvas>
+    <!-- GRÁFICOS -->
+    <div id="graficos" class="tab-content" style="display:none;">
+      <canvas id="userChart"></canvas>
     </div>
   </div>
 
-  <div class="toast-container" id="toast-container"></div>
+  <div class="toast-container" id="toastContainer"></div>
 
   <script>
-    const API = "https://backendfabricasuperodds.onrender.com/api/users";
-    const toastContainer = document.getElementById("toast-container");
-    let usersData = [];
+    const API_URL = "https://backendfabricasuperodds.onrender.com/api";
+    const toastContainer = document.getElementById("toastContainer");
+    let chart;
 
-    function showToast(msg, type="success") {
+    function showToast(msg, type = "success") {
       const toast = document.createElement("div");
       toast.className = `toast ${type}`;
       toast.textContent = msg;
       toastContainer.appendChild(toast);
-      setTimeout(() => toast.remove(), 3000);
+      setTimeout(() => {
+        toast.style.opacity = "0";
+        setTimeout(() => toast.remove(), 500);
+      }, 2500);
     }
 
-    function showTab(tab) {
-      document.querySelectorAll(".tab-content").forEach(t => t.style.display = "none");
-      document.querySelectorAll(".tab").forEach(b => b.classList.remove("active"));
-      document.getElementById(tab).style.display = "block";
-      event.target.classList.add("active");
-      if (tab === "charts") renderChart();
-    }
+    document.querySelectorAll(".tab").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".tab").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        document.querySelectorAll(".tab-content").forEach(c => (c.style.display = "none"));
+        document.getElementById(btn.dataset.tab).style.display = "block";
+      });
+    });
 
-    async function loadUsers() {
-      const res = await fetch(API);
+    async function carregarUsuarios() {
+      const res = await fetch(`${API_URL}/users`);
       const data = await res.json();
-      if (data.success) {
-        usersData = data.users;
-        updateDashboard();
-        renderUsers();
-      }
-    }
+      if (!data.success) return showToast("Erro ao carregar usuários", "error");
 
-    function updateDashboard() {
-      const liberados = usersData.filter(u => u.enabled).length;
-      const bloqueados = usersData.filter(u => !u.enabled && u.password).length;
-      const pendentes = usersData.filter(u => !u.enabled).length;
-      document.getElementById("count-liberados").textContent = liberados;
-      document.getElementById("count-bloqueados").textContent = bloqueados;
-      document.getElementById("count-pendentes").textContent = pendentes;
-    }
-
-    function renderUsers() {
-      const tbody = document.getElementById("users-table");
+      const tbody = document.getElementById("userTableBody");
       tbody.innerHTML = "";
-      usersData.forEach(u => {
+      let liberados = 0, bloqueados = 0, pendentes = 0;
+
+      data.users.forEach(user => {
+        let statusText = user.enabled ? "Liberado" : "Pendente";
+        let dotClass = user.enabled ? "dot-true" : "dot-pending";
+
         const tr = document.createElement("tr");
         tr.innerHTML = `
-          <td>${u.email}</td>
-          <td>${u.enabled ? "Liberado" : "Pendente"}</td>
-          <td>
-            <button class="btn liberar" onclick="updateUser('${u.email}', true)">Liberar</button>
-            <button class="btn bloquear" onclick="updateUser('${u.email}', false)">Bloquear</button>
-            <button class="btn excluir" onclick="deleteUser('${u.email}')">Excluir</button>
+          <td>${user.email}</td>
+          <td><span class="status-dot ${dotClass}"></span>${statusText}</td>
+          <td class="actions">
+            <button class="liberar">Liberar</button>
+            <button class="bloquear">Bloquear</button>
+            <button class="excluir">Excluir</button>
           </td>
         `;
         tbody.appendChild(tr);
+
+        tr.querySelector(".liberar").onclick = () => atualizarUsuario(user.email, true);
+        tr.querySelector(".bloquear").onclick = () => atualizarUsuario(user.email, false);
+        tr.querySelector(".excluir").onclick = () => excluirUsuario(user.email);
+
+        if (user.enabled) liberados++;
+        else pendentes++;
       });
+
+      document.getElementById("count-liberados").textContent = liberados;
+      document.getElementById("count-pendentes").textContent = pendentes;
+      document.getElementById("count-bloqueados").textContent = bloqueados;
+
+      renderChart(liberados, bloqueados, pendentes);
     }
 
-    async function updateUser(email, enabled) {
+    async function atualizarUsuario(email, enabled) {
       try {
-        const res = await fetch(`${API}/${encodeURIComponent(email)}`, {
+        const encoded = encodeURIComponent(email);
+        const res = await fetch(`${API_URL}/users/${encoded}`, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ enabled })
         });
-        if (!res.ok) throw new Error("Erro ao atualizar.");
-        showToast(`Usuário ${enabled ? "liberado" : "bloqueado"} com sucesso!`);
-        loadUsers();
-      } catch {
-        showToast("Erro ao atualizar usuário.", "error");
+        const data = await res.json();
+        if (data.success) {
+          showToast(enabled ? "Usuário liberado!" : "Usuário bloqueado!");
+          carregarUsuarios();
+        } else {
+          showToast(data.message || "Erro ao atualizar usuário", "error");
+        }
+      } catch (err) {
+        showToast("Erro na requisição (ver console)", "error");
+        console.error(err);
       }
     }
 
-    async function deleteUser(email) {
-      if (!confirm(`Excluir ${email}?`)) return;
+    async function excluirUsuario(email) {
+      if (!confirm("Tem certeza que deseja excluir este usuário?")) return;
       try {
-        const res = await fetch(`${API}/${encodeURIComponent(email)}`, { method: "DELETE" });
-        if (!res.ok) throw new Error("Erro ao excluir.");
-        showToast("Usuário excluído com sucesso!");
-        loadUsers();
-      } catch {
-        showToast("Erro ao excluir usuário.", "error");
+        const encoded = encodeURIComponent(email);
+        const res = await fetch(`${API_URL}/users/${encoded}`, { method: "DELETE" });
+        const data = await res.json();
+        if (data.success) {
+          showToast("Usuário excluído!");
+          carregarUsuarios();
+        } else {
+          showToast("Erro ao excluir usuário", "error");
+        }
+      } catch (err) {
+        showToast("Erro na requisição (ver console)", "error");
+        console.error(err);
       }
     }
 
-    function renderChart() {
-      const ctx = document.getElementById("statusChart").getContext("2d");
-      const liberados = usersData.filter(u => u.enabled).length;
-      const pendentes = usersData.filter(u => !u.enabled).length;
-
-      new Chart(ctx, {
+    function renderChart(liberados, bloqueados, pendentes) {
+      const ctx = document.getElementById("userChart").getContext("2d");
+      if (chart) chart.destroy();
+      chart = new Chart(ctx, {
         type: "doughnut",
         data: {
-          labels: ["Liberados", "Pendentes"],
+          labels: ["Liberados", "Bloqueados", "Pendentes"],
           datasets: [{
-            data: [liberados, pendentes],
-            backgroundColor: ["#28a745", "#ffc107"]
+            data: [liberados, bloqueados, pendentes],
+            backgroundColor: ["#22c55e", "#f59e0b", "#facc15"]
           }]
         },
         options: {
-          responsive: true,
-          plugins: {
-            legend: { position: "bottom" },
-          }
+          plugins: { legend: { position: "bottom" } },
+          responsive: true
         }
       });
     }
 
-    loadUsers();
+    carregarUsuarios();
   </script>
 </body>
 </html>
