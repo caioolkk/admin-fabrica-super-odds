@@ -1,235 +1,223 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Painel Administrativo — Fábrica Super Odds</title>
-  <link rel="icon" href="image/logo.png" type="image/png" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/a2e0a5e6b2.js" crossorigin="anonymous"></script>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background-color: #fff8dc;
+      font-family: 'Inter', sans-serif;
+      background-color: #f9f3cc;
+      color: #333;
       margin: 0;
       padding: 0;
-      text-align: center;
-    }
-    h1 {
-      background-color: white;
-      margin: 0;
-      padding: 15px;
-      font-size: 20px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    .cards {
       display: flex;
       justify-content: center;
-      gap: 20px;
-      flex-wrap: wrap;
-      margin: 30px auto;
+    }
+    .container {
+      width: 100%;
+      max-width: 700px;
+      padding: 20px;
+      text-align: center;
+      position: relative;
+    }
+    .logo-mark {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      opacity: 0.08;
+      width: 100px;
+    }
+    h1 {
+      font-size: 20px;
+      margin-bottom: 20px;
+    }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 15px;
+      margin-bottom: 20px;
     }
     .card {
-      background: #fffdf0;
-      border-radius: 12px;
-      padding: 20px;
-      width: 180px;
+      background: #fff8dc;
+      padding: 15px;
+      border-radius: 10px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
     .card h2 {
       font-size: 16px;
-      color: #444;
+      margin: 0;
     }
     .card p {
       font-size: 22px;
-      font-weight: bold;
-      color: #222;
-      margin: 8px 0 0;
+      margin-top: 5px;
+      font-weight: 600;
     }
     .tabs {
-      margin: 20px auto;
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 10px;
+      margin-bottom: 15px;
     }
-    .tab {
+    .tab-btn {
       background: #f4d03f;
       border: none;
+      padding: 8px 14px;
       border-radius: 6px;
-      padding: 10px 20px;
+      margin: 0 4px;
       cursor: pointer;
-      font-weight: bold;
+      font-weight: 600;
     }
-    .tab.active {
+    .tab-btn.active {
       background: #d4ac0d;
       color: white;
     }
-    .error {
-      color: red;
-      margin-top: 10px;
-      font-size: 14px;
-    }
     table {
-      margin: 30px auto;
-      width: 90%;
-      border-collapse: collapse;
+      width: 100%;
       background: #fff;
       border-radius: 10px;
-      overflow: hidden;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      border-collapse: collapse;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
     }
     th, td {
-      padding: 12px 15px;
-      border-bottom: 1px solid #eee;
+      padding: 10px;
       text-align: left;
+      border-bottom: 1px solid #eee;
     }
     th {
-      background: #f9f9f9;
-      font-weight: bold;
+      background: #fdf5b4;
     }
-    tr:hover {
-      background: #fdf5d5;
-    }
-    .btn {
-      padding: 6px 10px;
+    .actions button {
+      background: #f4d03f;
       border: none;
+      padding: 6px 10px;
       border-radius: 6px;
       cursor: pointer;
+      margin-right: 5px;
+      font-size: 12px;
+    }
+    .actions button:hover {
+      background: #f1c40f;
+    }
+    .error {
+      color: red;
+      margin: 10px 0;
       font-size: 14px;
-    }
-    .btn.enable {
-      background: #2ecc71;
-      color: white;
-    }
-    .btn.disable {
-      background: #e74c3c;
-      color: white;
-    }
-    .btn.delete {
-      background: #b03a2e;
-      color: white;
     }
   </style>
 </head>
 <body>
-  <h1>Painel Administrativo — Fábrica Super Odds</h1>
+  <div class="container">
+    <h1>Painel Administrativo — Fábrica Super Odds</h1>
+    <div class="cards">
+      <div class="card"><h2>Total</h2><p id="totalCount">0</p></div>
+      <div class="card"><h2>Liberados</h2><p id="liberadosCount">0</p></div>
+      <div class="card"><h2>Bloqueados</h2><p id="bloqueadosCount">0</p></div>
+      <div class="card"><h2>Pendentes</h2><p id="pendentesCount">0</p></div>
+    </div>
 
-  <div class="cards">
-    <div class="card"><h2>Total</h2><p id="total">0</p></div>
-    <div class="card"><h2>Liberados</h2><p id="enabled">0</p></div>
-    <div class="card"><h2>Bloqueados</h2><p id="disabled">0</p></div>
-    <div class="card"><h2>Pendentes</h2><p id="pending">0</p></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="all">Todos</button>
+      <button class="tab-btn" data-tab="pendentes">Pendentes</button>
+      <button class="tab-btn" data-tab="liberados">Liberados</button>
+      <button class="tab-btn" data-tab="bloqueados">Bloqueados</button>
+    </div>
+
+    <div id="errorMsg" class="error"></div>
+    <table>
+      <thead>
+        <tr><th>Email</th><th>Status</th><th>Ações</th></tr>
+      </thead>
+      <tbody id="userTable"><tr><td colspan="3">Carregando...</td></tr></tbody>
+    </table>
   </div>
-
-  <div class="tabs">
-    <button class="tab active" data-filter="all">Todos</button>
-    <button class="tab" data-filter="pending">Pendentes</button>
-    <button class="tab" data-filter="enabled">Liberados</button>
-    <button class="tab" data-filter="disabled">Bloqueados</button>
-  </div>
-
-  <p class="error" id="errorMsg"></p>
-
-  <table>
-    <thead>
-      <tr>
-        <th>Email</th>
-        <th>Status</th>
-        <th>Ações</th>
-      </tr>
-    </thead>
-    <tbody id="userTable">
-      <tr><td colspan="3" style="text-align:center;">Carregando...</td></tr>
-    </tbody>
-  </table>
+  <img src="image/logo.png" alt="logo" class="logo-mark">
 
   <script>
     const API_BASE = "https://backendfabricasuperodds.onrender.com";
 
-    const errorMsg = document.getElementById('errorMsg');
-    const userTable = document.getElementById('userTable');
-
     async function loadUsers() {
       try {
-        errorMsg.textContent = "";
         const res = await fetch(`${API_BASE}/api/users`);
-        if (!res.ok) throw new Error(`Erro ${res.status}`);
         const data = await res.json();
+        if (!data.success) throw new Error(data.message);
 
-        if (!data.success) throw new Error(data.message || "Erro ao carregar usuários");
-
-        renderUsers(data.users);
+        const users = data.users;
+        renderUsers(users);
       } catch (err) {
-        console.error(err);
-        errorMsg.textContent = "Erro ao carregar usuários. Tente novamente.";
-        userTable.innerHTML = `<tr><td colspan="3" style="text-align:center;">Erro ao carregar dados.</td></tr>`;
+        document.getElementById("errorMsg").textContent = "Erro ao carregar usuários. Tente novamente.";
+        console.error("Erro:", err);
       }
     }
 
     function renderUsers(users) {
+      const tbody = document.getElementById("userTable");
       const total = users.length;
-      const enabled = users.filter(u => u.enabled).length;
-      const disabled = users.filter(u => !u.enabled).length;
-      const pending = users.filter(u => !u.enabled).length;
+      const liberados = users.filter(u => u.enabled).length;
+      const bloqueados = users.filter(u => !u.enabled).length;
+      const pendentes = bloqueados; // mesmos que bloqueados inicialmente
 
-      document.getElementById('total').textContent = total;
-      document.getElementById('enabled').textContent = enabled;
-      document.getElementById('disabled').textContent = disabled;
-      document.getElementById('pending').textContent = pending;
+      document.getElementById("totalCount").textContent = total;
+      document.getElementById("liberadosCount").textContent = liberados;
+      document.getElementById("bloqueadosCount").textContent = bloqueados;
+      document.getElementById("pendentesCount").textContent = pendentes;
 
-      const activeFilter = document.querySelector('.tab.active').dataset.filter;
-      let filtered = users;
+      const activeTab = document.querySelector(".tab-btn.active").dataset.tab;
+      const filtered = users.filter(u => {
+        if (activeTab === "liberados") return u.enabled;
+        if (activeTab === "bloqueados" || activeTab === "pendentes") return !u.enabled;
+        return true;
+      });
 
-      if (activeFilter === 'pending') filtered = users.filter(u => !u.enabled);
-      if (activeFilter === 'enabled') filtered = users.filter(u => u.enabled);
-      if (activeFilter === 'disabled') filtered = users.filter(u => !u.enabled);
-
-      if (filtered.length === 0) {
-        userTable.innerHTML = `<tr><td colspan="3" style="text-align:center;">Nenhum usuário encontrado.</td></tr>`;
-        return;
-      }
-
-      userTable.innerHTML = filtered.map(u => `
+      tbody.innerHTML = filtered.map(u => `
         <tr>
           <td>${u.email}</td>
-          <td>${u.enabled ? 'Liberado' : 'Pendente'}</td>
-          <td>
-            <button class="btn enable" onclick="updateUser('${u.email}', true)">Liberar</button>
-            <button class="btn disable" onclick="updateUser('${u.email}', false)">Bloquear</button>
-            <button class="btn delete" onclick="deleteUser('${u.email}')">Excluir</button>
+          <td>${u.enabled ? "Liberado" : "Bloqueado"}</td>
+          <td class="actions">
+            ${u.enabled 
+              ? `<button onclick="updateUser('${u.email}', false)">Bloquear</button>`
+              : `<button onclick="updateUser('${u.email}', true)">Liberar</button>`}
+            <button onclick="deleteUser('${u.email}')">Remover</button>
           </td>
         </tr>
-      `).join('');
+      `).join("") || `<tr><td colspan="3">Nenhum usuário encontrado.</td></tr>`;
     }
 
     async function updateUser(email, enabled) {
       try {
-        const res = await fetch(`${API_BASE}/api/users/${email}`, {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' },
+        const res = await fetch(`${API_BASE}/api/users/${encodeURIComponent(email)}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ enabled })
         });
-        if (!res.ok) throw new Error("Falha ao atualizar usuário.");
-        await loadUsers();
+        const data = await res.json();
+        if (!data.success) throw new Error(data.message);
+        loadUsers();
       } catch (err) {
         alert("Erro ao atualizar usuário.");
+        console.error(err);
       }
     }
 
     async function deleteUser(email) {
-      if (!confirm(`Deseja realmente excluir ${email}?`)) return;
+      if (!confirm(`Remover ${email}?`)) return;
       try {
-        const res = await fetch(`${API_BASE}/api/users/${email}`, { method: 'DELETE' });
-        if (!res.ok) throw new Error("Falha ao excluir usuário.");
-        await loadUsers();
+        const res = await fetch(`${API_BASE}/api/users/${encodeURIComponent(email)}`, {
+          method: "DELETE"
+        });
+        const data = await res.json();
+        if (!data.success) throw new Error(data.message);
+        loadUsers();
       } catch (err) {
-        alert("Erro ao excluir usuário.");
+        alert("Erro ao remover usuário.");
+        console.error(err);
       }
     }
 
-    document.querySelectorAll('.tab').forEach(tab => {
-      tab.addEventListener('click', () => {
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
+    document.querySelectorAll(".tab-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
         loadUsers();
       });
     });
